@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <fstream> 
-using namespace std;
+using namespace std; 
 
 const int MAX = 100;
 int x = MAX;
