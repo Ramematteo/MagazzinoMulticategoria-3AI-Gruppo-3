@@ -1,8 +1,7 @@
 #include <iostream>
 #include <cmath>
-#include <fstream> 
-using namespace std; 
-
+#include <fstream>
+using namespace std;
 
 const int MAX = 100;
 int x = MAX;
@@ -25,12 +24,12 @@ int numArticoli = 0;
 
 void inserisci_articolo() {
     if (numArticoli >= MAX) {
-        cout << "Magazzino pieno!\n";
+        cout << "\n❌ Magazzino pieno!\n";
         return;
     }
-    if (x < 0) {
-        x = abs(x);
-    }
+    if (x < 0) x = abs(x);
+
+    cout << "\n>>> INSERIMENTO NUOVO ARTICOLO <<<\n";
     cout << "Codice: ";
     cin >> magazzino[numArticoli].codice;
     cin.ignore();
@@ -40,21 +39,22 @@ void inserisci_articolo() {
     getline(cin, magazzino[numArticoli].categoria);
     cout << "Quantita: ";
     cin >> magazzino[numArticoli].quantita;
+
     y = magazzino[numArticoli].quantita;
     if (magazzino[numArticoli].quantita < MAX && magazzino[numArticoli].quantita <= x) {
         cout << "Prezzo: ";
         cin >> magazzino[numArticoli].prezzo;
         numArticoli++;
-        cout << "Articolo inserito.\n";
+        cout << "✅ Articolo inserito con successo!\n";
     } else {
-        cout << "Spazio non disponibile";
+        cout << "⚠️ Spazio non disponibile.\n";
         x = y - x;
     }
 }
 
 void cerca_per_codice() {
     string codice;
-    cout << "Codice da cercare: ";
+    cout << "\n>>> CERCA ARTICOLO PER CODICE <<<\nCodice da cercare: ";
     cin >> codice;
     bool trovato = false;
     for (int i = 0; i < numArticoli; i++) {
@@ -65,12 +65,12 @@ void cerca_per_codice() {
         }
     }
     if (!trovato)
-        cout << "Articolo non trovato.\n";
+        cout << "❌ Articolo non trovato.\n";
 }
 
 void cerca_per_categoria() {
     string cat;
-    cout << "Categoria da cercare: ";
+    cout << "\n>>> CERCA ARTICOLO PER CATEGORIA <<<\nCategoria da cercare: ";
     cin.ignore();
     getline(cin, cat);
     bool trovato = false;
@@ -82,11 +82,11 @@ void cerca_per_categoria() {
         }
     }
     if (!trovato)
-        cout << "Nessun articolo trovato in questa categoria.\n";
+        cout << "❌ Nessun articolo trovato in questa categoria.\n";
 }
 
 void articoli_inseriti() {
-    cout << "Articoli inseriti:\n";
+    cout << "\n>>> ELENCO ARTICOLI INSERITI <<<\n";
     if (numArticoli == 0) {
         cout << "Nessun articolo inserito.\n";
         return;
@@ -101,7 +101,7 @@ void articoli_inseriti() {
 }
 
 void articoli_esauriti() {
-    cout << "Articoli esauriti:\n";
+    cout << "\n>>> ARTICOLI ESAURITI <<<\n";
     bool nessuno = true;
     for (int i = 0; i < numArticoli; i++) {
         if (magazzino[i].quantita == 0) {
@@ -123,47 +123,45 @@ void ordina_per_valore_totale() {
             }
         }
     }
-    cout << "Articoli ordinati per valore totale (desc):\n";
+    cout << "\n>>> ARTICOLI ORDINATI PER VALORE TOTALE (DESC) <<<\n";
     for (int i = 0; i < numArticoli; i++) {
         cout << "Codice: " << magazzino[i].codice << ", Nome: " << magazzino[i].nome
              << ", Quantita: " << magazzino[i].quantita << ", Prezzo: " << magazzino[i].prezzo
              << ", Valore Totale: " << magazzino[i].valoreTotale() << "\n";
-
     }
 }
 
 int main() {
     int scelta;
-
     ifstream inFile("magazzino.txt");
     if (inFile) {
         inFile >> numArticoli;
         inFile.ignore();
         for (int i = 0; i < numArticoli; i++) {
-            getline(inFile, magazzino[i].codice);
-            getline(inFile, magazzino[i].nome);
-            getline(inFile, magazzino[i].categoria);
-            inFile >> magazzino[i].quantita;
-            inFile >> magazzino[i].prezzo;
-            inFile.ignore();
+            string label;
+            getline(inFile, label); magazzino[i].codice = label.substr(8);
+            getline(inFile, label); magazzino[i].nome = label.substr(6);
+            getline(inFile, label); magazzino[i].categoria = label.substr(11);
+            getline(inFile, label); magazzino[i].quantita = stoi(label.substr(10));
+            getline(inFile, label); magazzino[i].prezzo = stod(label.substr(8));
+            getline(inFile, label); // separatore ----
         }
         inFile.close();
-        cout << "Dati caricati con successo.\n";
+        cout << "\n✅ Dati caricati con successo da 'magazzino.txt'.\n";
     }
 
     do {
-        cout << "\n--- MENU ---\n";
-        cout << "1. Inserisci articolo\n";
-        cout << "2. Cerca per codice\n";
-        cout << "3. Cerca per categoria\n";
-        cout << "4. Articoli inseriti\n";
-        cout << "5. Articoli esauriti\n";
-        cout << "6. Ordina per valore totale\n";
-        cout << "0. Esci\n";
+        cout << "\n======== MENU GESTIONE MAGAZZINO ========\n";
+        cout << "[1] Inserisci articolo\n";
+        cout << "[2] Cerca per codice\n";
+        cout << "[3] Cerca per categoria\n";
+        cout << "[4] Mostra articoli\n";
+        cout << "[5] Mostra esauriti\n";
+        cout << "[6] Ordina per valore totale\n";
+        cout << "[0] Esci\n";
+        cout << "========================================\n";
         cout << "Scelta: ";
         cin >> scelta;
-
-
 
         switch (scelta) {
             case 1: inserisci_articolo(); y > 1 ? x = x - y : x = x + 1; break;
@@ -172,22 +170,23 @@ int main() {
             case 4: articoli_inseriti(); break;
             case 5: articoli_esauriti(); break;
             case 6: ordina_per_valore_totale(); break;
-            case 0: cout << "Uscita dal programma.\n"; break;
-            default: cout << "Scelta non valida.\n";
+            case 0: cout << "\n👋 Uscita dal programma.\n"; break;
+            default: cout << "\n❌ Scelta non valida. Riprova.\n";
         }
     } while (scelta != 0);
-    
-     ofstream outFile("magazzino.txt");
+
+    ofstream outFile("magazzino.txt");
     outFile << numArticoli << "\n";
     for (int i = 0; i < numArticoli; i++) {
-        outFile << magazzino[i].codice << "\n";
-        outFile << magazzino[i].nome << "\n";
-        outFile << magazzino[i].categoria << "\n";
-        outFile << magazzino[i].quantita << "\n";
-        outFile << magazzino[i].prezzo << "\n";
+        outFile << "Codice: " << magazzino[i].codice << "\n";
+        outFile << "Nome: " << magazzino[i].nome << "\n";
+        outFile << "Categoria: " << magazzino[i].categoria << "\n";
+        outFile << "Quantita: " << magazzino[i].quantita << "\n";
+        outFile << "Prezzo: " << magazzino[i].prezzo << "\n";
+        outFile << "----\n";
     }
     outFile.close();
-    cout << "Dati salvati nel file magazzino.txt.\n";
+    cout << "\n💾 Dati salvati con successo nel file 'magazzino.txt'.\n";
 
     return 0;
 }
