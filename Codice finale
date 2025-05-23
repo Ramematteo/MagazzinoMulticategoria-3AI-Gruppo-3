@@ -164,6 +164,7 @@ int main() {
         cin >> scelta;
 
 
+
         switch (scelta) {
             case 1: inserisci_articolo(); y > 1 ? x = x - y : x = x + 1; break;
             case 2: cerca_per_codice(); break;
