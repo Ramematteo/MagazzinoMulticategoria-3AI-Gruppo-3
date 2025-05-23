@@ -176,6 +176,18 @@ int main() {
             default: cout << "Scelta non valida.\n";
         }
     } while (scelta != 0);
+    
+     ofstream outFile("magazzino.txt");
+    outFile << numArticoli << "\n";
+    for (int i = 0; i < numArticoli; i++) {
+        outFile << magazzino[i].codice << "\n";
+        outFile << magazzino[i].nome << "\n";
+        outFile << magazzino[i].categoria << "\n";
+        outFile << magazzino[i].quantita << "\n";
+        outFile << magazzino[i].prezzo << "\n";
+    }
+    outFile.close();
+    cout << "Dati salvati nel file magazzino.txt.\n";
 
     return 0;
 }
