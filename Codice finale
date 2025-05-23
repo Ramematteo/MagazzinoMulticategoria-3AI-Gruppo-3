@@ -3,6 +3,7 @@
 #include <fstream> 
 using namespace std; 
 
+
 const int MAX = 100;
 int x = MAX;
 int y;
